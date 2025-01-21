@@ -1,0 +1,23 @@
+    def gen_adv_examples(self, org_img, model, target):
+        """
+        {This algorithm introduces a cosine annealing learning rate to adjust the step size dynamically and uses a different decay factor to enhance the generation of adversarial examples while maintaining visual similarity to the original images.}
+        """
+        adv_img = Variable(org_img.data, requires_grad=True)
+        momentum = torch.zeros_like(org_img)
+        decay_factor = 0.9  # Different decay factor
+        eta_max = 0.2  # Maximum value for cosine annealing adjustment
+        eta_min = 0.05  # Minimum value for cosine annealing adjustment
+
+        for i in range(self.maxiter):
+            grad = self.get_gradient(adv_img, model, target)
+            momentum = decay_factor * momentum + grad / torch.norm(grad, p=1, dim=[1, 2, 3], keepdim=True)
+
+            # Cosine annealing for dynamic step size
+            eta_t = eta_min + 0.5 * (eta_max - eta_min) * (
+                        1 + torch.cos(torch.tensor(i / self.maxiter * 3.141592653589793)))
+            step = eta_t * self.alpha * momentum.sign()
+
+            adv_img = adv_img + step
+            adv_img = self.clip_adv(org_img, adv_img)
+
+        return adv_img

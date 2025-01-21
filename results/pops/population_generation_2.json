@@ -1,0 +1,50 @@
+[
+     {
+          "algorithm": "This algorithm implements a gradient ascent approach with adaptive step size and uses L-infinity normalization to create adversarial examples.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm implements a gradient ascent approach with adaptive step size and uses L-infinity normalization to create adversarial examples.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    step_size = self.alpha\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad = grad / (torch.norm(grad, p=float('inf')) + 1e-8)  # Using L-infinity normalization\n        adv_img = adv_img + step_size * grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        step_size = step_size * 0.9  # Adaptive step size reduction\n\n    return adv_img",
+          "objective": 559.1853,
+          "other_inf": null
+     },
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    adv_noise = torch.zeros_like(org_img)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad = grad / (torch.norm(grad, p=2) + 1e-8)\n        adv_noise = self.alpha * grad + adv_noise\n        adv_img = adv_img + self.alpha * adv_noise.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 564.94322,
+          "other_inf": null
+     },
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    eta = torch.zeros_like(org_img)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        eta = eta + grad / torch.norm(grad, p=2, dim=[1, 2, 3], keepdim=True)\n        adv_img = adv_img + self.alpha * eta.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 568.01817,
+          "other_inf": null
+     },
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = 0\n    decay_factor = 1.0\n    \n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        momentum = decay_factor * momentum + grad / torch.norm(grad, p=1, dim=[1, 2, 3], keepdim=True)\n        adv_img = adv_img + self.alpha * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        \n    return adv_img",
+          "objective": 590.52085,
+          "other_inf": null
+     },
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    accumulated_grad = torch.zeros_like(org_img)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        accumulated_grad = accumulated_grad + grad / (torch.norm(grad, p=2, dim=[1, 2, 3], keepdim=True) + 1e-8)\n        adv_img = adv_img + self.alpha * accumulated_grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 591.81861,
+          "other_inf": null
+     },
+     {
+          "algorithm": "This algorithm implements a non-momentum iterative attack using a dynamic step size that decreases over iterations to generate adversarial examples.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm implements a non-momentum iterative attack using a dynamic step size that decreases over iterations to generate adversarial examples.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    step_size = self.alpha\n\n    for i in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        step_size = self.alpha * (1 - (i / self.maxiter))  # Dynamic step size\n        adv_img = adv_img + step_size * grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n\n    return adv_img",
+          "objective": 625.88169,
+          "other_inf": null
+     },
+     {
+          "algorithm": "This algorithm implements a momentum iterative attack using a dynamic decay factor to adjust the accumulated gradient, aiming to generate adversarial examples.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm implements a momentum iterative attack using a dynamic decay factor to adjust the accumulated gradient, aiming to generate adversarial examples.}\n    \"\"\"\n    g = 0\n    decay_factor = 0.9\n    adv_img = Variable(org_img.data, requires_grad=True)\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        g = decay_factor * g + grad / (torch.norm(grad, p=1, dim=[1, 2, 3], keepdim=True) + 1e-10)\n        adv_img = adv_img + self.alpha * g.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n\n    return adv_img",
+          "objective": 679.73077,
+          "other_inf": null
+     },
+     {
+          "algorithm": "This algorithm implements a momentum-based iterative attack with a decaying normalization factor to generate adversarial examples.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm implements a momentum-based iterative attack with a decaying normalization factor to generate adversarial examples.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = torch.zeros_like(org_img)\n    decay_factor = 0.9  # Decaying factor for momentum\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad = grad / (torch.norm(grad, p=2) + 1e-8)  # Using L2 normalization\n        momentum = decay_factor * momentum + grad\n        adv_img = adv_img + self.alpha * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n\n    return adv_img",
+          "objective": 706.97195,
+          "other_inf": null
+     }
+]

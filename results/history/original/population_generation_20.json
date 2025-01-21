@@ -1,0 +1,6 @@
+{
+     "algorithm": "This algorithm employs a multi-scale gradient accumulation technique with adaptive step sizes, ensuring the generation of high-confidence adversarial examples while maintaining visual similarity to the original images.",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm employs a multi-scale gradient accumulation technique with adaptive step sizes, ensuring the generation of high-confidence adversarial examples while maintaining visual similarity to the original images.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    accumulated_grad = torch.zeros_like(org_img)\n    step_size = self.alpha\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        accumulated_grad += grad / (torch.norm(grad, p=2) + 1e-8)\n        \n        # Calculate a dynamic step size based on the current accumulated gradient\n        dynamic_step_size = step_size / (1 + torch.norm(accumulated_grad, p=2))\n        \n        adv_img = adv_img + dynamic_step_size * accumulated_grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n\n    return adv_img",
+     "objective": 363.02705,
+     "other_inf": null
+}

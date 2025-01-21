@@ -1,0 +1,6 @@
+{
+     "algorithm": "This algorithm employs a momentum-based approach where the gradient is accumulated using a momentum term to stabilize the direction of perturbations, while the perturbation magnitude is adaptively adjusted within a specified epsilon bound to ensure minimal visual distortion.",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm employs a momentum-based approach where the gradient is accumulated using a momentum term to stabilize the direction of perturbations, while the perturbation magnitude is adaptively adjusted within a specified epsilon bound to ensure minimal visual distortion.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = torch.zeros_like(org_img)\n    decay_factor = 1.0\n    epsilon = self.epsilon\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        momentum = decay_factor * momentum + grad / (torch.norm(grad, p=1) + 1e-8)\n        perturbation = epsilon * momentum.sign()\n        adv_img = adv_img + self.alpha * perturbation\n        adv_img = self.clip_adv(org_img, adv_img)\n\n    return adv_img",
+     "objective": 387.08707,
+     "other_inf": null
+}

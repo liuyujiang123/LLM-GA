@@ -1,0 +1,26 @@
+[
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = 0\n    decay_factor = 1.0\n    \n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        momentum = decay_factor * momentum + grad / torch.norm(grad, p=1, dim=[1, 2, 3], keepdim=True)\n        adv_img = adv_img + self.alpha * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        \n    return adv_img",
+          "objective": 590.52085,
+          "other_inf": null
+     },
+     {
+          "algorithm": "```",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        adv_img = adv_img + self.alpha * grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 912.11952,
+          "other_inf": null
+     },
+     {
+          "algorithm": "Generates adversarial examples by iteratively perturbing the input images using gradient ascent to approach the target label while ensuring visual similarity.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"{Generates adversarial examples by iteratively perturbing the input images using gradient ascent to approach the target label while ensuring visual similarity.}\"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        adv_img = adv_img + self.alpha * grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 932.13392,
+          "other_inf": null
+     },
+     {
+          "algorithm": "A gradient-based attack algorithm that iteratively perturbs input images to mislead a model into classifying them as a specified target label while maintaining visual similarity to the original images.",
+          "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"{A gradient-based attack algorithm that iteratively perturbs input images to mislead a model into classifying them as a specified target label while maintaining visual similarity to the original images.}\"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        adv_img = adv_img + self.alpha * grad.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n    return adv_img",
+          "objective": 938.13198,
+          "other_inf": null
+     }
+]

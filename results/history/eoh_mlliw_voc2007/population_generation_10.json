@@ -1,0 +1,6 @@
+{
+     "algorithm": "```",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    adv_img = Variable(org_img.data, requires_grad=True)\n    perturbation = torch.zeros_like(org_img)\n    \n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        perturbation += grad / (torch.norm(grad, p=float('inf')) + 1e-10)\n        perturbation = torch.clamp(perturbation, -self.epsilon, self.epsilon)\n        adv_img = adv_img + self.alpha * perturbation\n        adv_img = self.clip_adv(org_img, adv_img)\n        \n    return adv_img",
+     "objective": 457.27915,
+     "other_inf": null
+}

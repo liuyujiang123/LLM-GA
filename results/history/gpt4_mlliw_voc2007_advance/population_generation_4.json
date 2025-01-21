@@ -1,0 +1,6 @@
+{
+     "algorithm": "This algorithm uses a projected gradient descent approach with adaptive momentum scaling, employing L-infinity normalization to create adversarial examples.",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm uses a projected gradient descent approach with adaptive momentum scaling, employing L-infinity normalization to create adversarial examples.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = torch.zeros_like(org_img)\n    step_size = self.alpha\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad = grad / (torch.norm(grad, p=float('inf')) + 1e-8)  # Using L-infinity normalization\n        momentum = 0.85 * momentum + grad  # Adaptive momentum scaling\n        adv_img = adv_img + step_size * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        step_size = step_size * 0.9  # Adaptive step size reduction\n\n    return adv_img",
+     "objective": 423.63354,
+     "other_inf": null
+}

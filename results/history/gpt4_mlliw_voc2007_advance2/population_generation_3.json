@@ -1,0 +1,6 @@
+{
+     "algorithm": "This algorithm combines gradient ascent with momentum and an exponential decay of step size to create adversarial examples.",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm combines gradient ascent with momentum and an exponential decay of step size to create adversarial examples.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = torch.zeros_like(org_img)\n    decay_factor = 0.9\n    step_size = self.alpha\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad = grad / (torch.norm(grad, p=float('inf')) + 1e-8)\n        momentum = decay_factor * momentum + grad\n        adv_img = adv_img + step_size * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        step_size = step_size * decay_factor\n\n    return adv_img",
+     "objective": 426.98866,
+     "other_inf": null
+}

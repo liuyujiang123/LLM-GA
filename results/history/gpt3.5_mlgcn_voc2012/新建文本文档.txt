@@ -1,0 +1,26 @@
+    def gen_adv_examples(self, org_img, target_model, target):
+        adv_img = Variable(org_img.data, requires_grad=True)
+        maxiter = 30
+        epsilon = 0.3
+        alpha = 0.002
+        decay_factor = 0.7
+        loss_func = nn.BCELoss(reduction='mean')
+
+        for _ in range(maxiter):
+            output = target_model(adv_img)
+            true_label = output.clone()
+            true_label[true_label >= 0.5] = 1
+            true_label[true_label < 0.5] = 0
+            loss = -loss_func(output, target.float())
+            target_model.zero_grad()
+            if adv_img.grad is not None:
+                adv_img.grad.data.zero_()
+            loss.backward()
+            perturbation = alpha * adv_img.grad.sign()
+            adv_img = adv_img + perturbation
+            adv_img = torch.clamp(adv_img, org_img - epsilon, org_img + epsilon)
+            adv_img = torch.clamp(adv_img, 0, 1)
+            adv_img = Variable(adv_img.data, requires_grad=True)
+            alpha = decay_factor * alpha
+
+        return adv_img

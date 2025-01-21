@@ -1,0 +1,6 @@
+{
+     "algorithm": "This algorithm utilizes a momentum-based gradient ascent method with an exponential decay applied to the step size, aiming to efficiently guide the adversarial examples towards the target label while maintaining their perceptual similarity to the original images.",
+     "code": "import torch\nfrom torch.autograd import Variable\n\ndef gen_adv_examples(self, org_img, model, target):\n    \"\"\"\n    {This algorithm utilizes a momentum-based gradient ascent method with an exponential decay applied to the step size, aiming to efficiently guide the adversarial examples towards the target label while maintaining their perceptual similarity to the original images.}\n    \"\"\"\n    adv_img = Variable(org_img.data, requires_grad=True)\n    momentum = torch.zeros_like(org_img)\n    step_size = self.alpha\n\n    for _ in range(self.maxiter):\n        grad = self.get_gradient(adv_img, model, target)\n        grad /= (torch.norm(grad, p=2) + 1e-8)\n        momentum = momentum * 0.9 + grad\n        adv_img = adv_img + step_size * momentum.sign()\n        adv_img = self.clip_adv(org_img, adv_img)\n        step_size *= 0.9  # Exponential decay of step size\n\n    return adv_img",
+     "objective": 383.15297,
+     "other_inf": null
+}

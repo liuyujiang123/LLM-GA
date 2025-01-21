@@ -1,0 +1,5 @@
+Total evaluations: 488, Successful evaluations: 375
+Total evaluations: 488, Successful evaluations: 407
+Total evaluations: 488, Successful evaluations: 4
+Total evaluations: 488, Successful evaluations: 381
+Total evaluations: 488, Successful evaluations: 462
